@@ -1,0 +1,42 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:2025.07.1
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "443:443/tcp"
+      
+    environment:
+      TZ: UTC
+      FTLCONF_dns_listeningMode: "all"
+      FTLCONF_dns_upstreams: "1.1.1.1;1.0.0.1"
+      FTLCONF_webserver_port: "443s"
+      
+    networks:
+      homenet:
+        ipv4_address: 192.168.100.5
+        
+    volumes:
+      - pihole-etc:/etc/pihole
+      - pihole-dnsmasq:/etc/dnsmasq.d
+      
+    cap_add:
+      - CHOWN
+      - NET_BIND_SERVICE
+      - NET_ADMIN
+      - SYS_TIME
+      - SYS_NICE
+    restart: unless-stopped
+
+networks:
+  homenet:
+    external:
+      name: homenet
+
+volumes:
+  pihole-etc:
+    external: true
+  pihole-dnsmasq:
+    external: true
