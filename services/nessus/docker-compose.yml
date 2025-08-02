@@ -1,0 +1,18 @@
+services:
+  nessus:
+    container_name: nessus
+    image: tenable/nessus:latest
+
+    environment:
+      - "TZ=UTC"
+      - "LINKING_KEY=${LINKING_KEY}"
+      - "NAME=homelab-scanner"
+
+    cap_add:
+      - NET_ADMIN
+
+    restart: unless-stopped
+
+volumes:
+  nessus-data:
+    external: true
