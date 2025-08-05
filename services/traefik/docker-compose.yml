@@ -1,0 +1,23 @@
+services:
+  traefik:
+    image: traefik:v3.5
+    container_name: traefik
+    environment:
+      - "CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}"
+      - "TRAEFIK_CERTIFICATESRESOLVERS_homelab_ACME_EMAIL=${ACME_EMAIL_ADDRESS}"
+      - "TRAEFIK_CERTIFICATESRESOLVERS_homelab_ACME_DNSCHALLENGE=true"
+      - "TRAEFIK_CERTIFICATESRESOLVERS_homelab_ACME_DNSCHALLENGE_PROVIDER=cloudflare"
+      - "TRAEFIK_ENTRYPOINTS_web_ADDRESS=:80"
+      - "TRAEFIK_ENTRYPOINTS_websecure_ADDRESS=:443"
+      - "TRAEFIK_PROVIDERS_DOCKER=true"
+      - "TRAEFIK_API=true"
+      - "TRAEFIK_ACCESSLOG=true"
+      - "TRAEFIK_ACCESSLOG_ADDINTERNALS=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.home.mcgrath.sh`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.service=api@internal"
