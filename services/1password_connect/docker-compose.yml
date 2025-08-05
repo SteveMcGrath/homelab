@@ -1,0 +1,29 @@
+version: "3.4"
+
+services:
+  op-connect-api:
+    image: 1password/connect-api:latest
+    container_name: op-connect-api
+    ports:
+      - "8080:8080"
+    environment:
+      OP_SESION: ${OP_SESSION}
+    volumes:
+      - 1password-data:/home/opuser/.op/data
+
+  op-connect-sync:
+    image: 1password/connect-sync:latest
+    container_name: op-connect-sync
+    ports:
+      - "8081:8080"
+    environment:
+      OP_SESSION: ${OP_SESSION}
+    volumes:
+      - 1password-data:/home/opuser/.op/data
+
+volumes:
+  1password-data:
+    driver_opts:
+      type: nfs
+      o: "addr=192.168.100.60,nolock,soft,rw"
+      device: ":/volume1/Services/1password"
