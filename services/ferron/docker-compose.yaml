@@ -1,0 +1,15 @@
+services:
+  ferron:
+    container_name: ferron
+    image: ferronserver/ferron:2-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /nas/services/ferron/ferron.kdl:/etc/ferron.kdl:ro
+      - /nas/services/ferron/acme:/var/cache/ferron-acme
+
+networks:
+  default:
+    name: main
+    external: true

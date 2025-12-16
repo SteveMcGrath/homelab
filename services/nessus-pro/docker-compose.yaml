@@ -1,0 +1,25 @@
+services:
+  nessus-tvm:
+    container_name: nessus-tvm
+    image: tenable/nessus:latest-oracle
+    
+    environment:
+      - TZ="UTC"
+      - NAME="homelab-scanner"
+      - GROUPS="IL Home"
+      - LINKING_KEY="${LINKING_KEY}"
+      - USERNAME="${USERNAME}"
+      - PASSWORD="${PASSWORD}"
+
+    volumes:
+      - /nas/services/nessus:/opt/nessus/var/nessus
+
+    cap_add:
+      - NET_ADMIN
+
+    restart: unless-stopped
+
+networks:
+  default:
+    name: main
+    external: true
